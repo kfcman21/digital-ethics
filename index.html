@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>슈뻘맨과 함께하는 디지털 윤리 탐험 | 서울문백초</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap');
+  :root{
+    --red:#ff5a5f; --blue:#3a86ff; --yellow:#ffbe0b; --green:#2ec4b6; --purple:#8338ec;
+    --bg:#fff8ec; --ink:#2b2d42; --card:#ffffff; --muted:#6c757d;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Gowun Dodum','Malgun Gothic',sans-serif;background:var(--bg);color:var(--ink);font-size:18px;line-height:1.6}
+  h1,h2,h3,.jua{font-family:'Jua','Malgun Gothic',sans-serif;font-weight:400}
+  header{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;padding:28px 20px 70px;text-align:center;position:relative}
+  header .school{opacity:.9;font-size:15px}
+  header h1{font-size:clamp(28px,5vw,46px);margin:6px 0}
+  header p{margin:0;font-size:18px}
+  .wave{position:absolute;bottom:-1px;left:0;width:100%;height:50px}
+  nav{position:sticky;top:0;z-index:10;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.08);display:flex;gap:6px;overflow-x:auto;padding:10px}
+  nav button{flex:0 0 auto;border:0;border-radius:999px;padding:10px 16px;font-family:'Jua';font-size:17px;background:#f1f3f5;color:var(--ink);cursor:pointer;transition:.2s}
+  nav button.active{background:var(--ink);color:#fff}
+  nav button .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#ced4da;margin-left:6px;vertical-align:middle}
+  nav button .dot.done{background:var(--green)}
+  main{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+  section{display:none;animation:fade .35s}
+  section.show{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .card{background:var(--card);border-radius:22px;padding:24px;margin-bottom:20px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+  .ep-badge{display:inline-block;padding:4px 14px;border-radius:999px;color:#fff;font-family:'Jua';font-size:16px}
+  .b1{background:var(--red)} .b2{background:var(--blue)} .b3{background:var(--green)}
+  h2{font-size:30px;margin:10px 0 6px}
+  h3{font-size:23px;margin:4px 0 12px}
+  .progress-wrap{background:#fff;border-radius:18px;padding:16px 20px;margin-bottom:20px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+  .bar{height:18px;background:#e9ecef;border-radius:999px;overflow:hidden}
+  .bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--yellow),var(--red));transition:width .6s}
+  .stars{font-size:26px;letter-spacing:4px}
+  .btn{border:0;border-radius:14px;padding:12px 22px;font-family:'Jua';font-size:19px;cursor:pointer;color:#fff;background:var(--blue);transition:transform .1s}
+  .btn:active{transform:scale(.96)}
+  .btn.red{background:var(--red)} .btn.green{background:var(--green)} .btn.gray{background:#adb5bd} .btn.purple{background:var(--purple)} .btn.yellow{background:var(--yellow);color:var(--ink)}
+  .video{position:relative;padding-top:56.25%;border-radius:18px;overflow:hidden;background:#000}
+  .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .def{background:#fff4d6;border-left:8px solid var(--yellow);border-radius:14px;padding:16px 18px}
+  .def b{color:var(--purple)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .chip{background:#fff;border:2px solid var(--yellow);border-radius:999px;padding:4px 14px}
+  /* fill blanks */
+  .blank-line{font-size:20px;margin:14px 0;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+  .blank{display:inline-flex;align-items:center;gap:6px}
+  .blank input{width:120px;padding:8px 10px;font-size:20px;border:3px dashed #adb5bd;border-radius:12px;text-align:center;font-family:'Jua';background:#f8f9fa}
+  .blank input.ok{border:3px solid var(--green);background:#e6fffa;color:#0b7a6f}
+  .blank input.no{border:3px solid var(--red);background:#fff0f0;animation:shake .3s}
+  .hint{font-size:14px;color:var(--muted);font-family:'Jua'}
+  @keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .feedback{margin-top:12px;font-family:'Jua';font-size:20px;min-height:30px}
+  .feedback.ok{color:#0b7a6f} .feedback.no{color:var(--red)}
+  /* OX */
+  .ox{display:flex;gap:20px;justify-content:center;margin:16px 0}
+  .ox button{width:130px;height:130px;border-radius:50%;border:0;font-size:70px;font-family:'Jua';cursor:pointer;color:#fff;box-shadow:0 6px 0 rgba(0,0,0,.15)}
+  .ox .o{background:var(--blue)} .ox .x{background:var(--red)}
+  .ox button:disabled{opacity:.45}
+  /* quiz choices */
+  .choices{display:grid;gap:10px;margin-top:10px}
+  .choices button{text-align:left;padding:14px 16px;border-radius:14px;border:3px solid #e9ecef;background:#fff;font-size:18px;font-family:'Gowun Dodum';cursor:pointer}
+  .choices button:hover{border-color:var(--blue)}
+  .choices button.ok{border-color:var(--green);background:#e6fffa}
+  .choices button.no{border-color:var(--red);background:#fff0f0}
+  /* sort game */
+  .pool{display:flex;flex-wrap:wrap;gap:10px;min-height:60px;padding:12px;background:#f8f9fa;border-radius:16px}
+  .item{padding:10px 16px;background:#fff;border:3px solid var(--purple);border-radius:14px;cursor:grab;font-family:'Jua';font-size:18px;user-select:none}
+  .item.sel{background:var(--purple);color:#fff}
+  .item.ok{border-color:var(--green);background:#e6fffa;cursor:default}
+  .item.no{border-color:var(--red);animation:shake .3s}
+  .bins{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .bin{border-radius:18px;padding:14px;min-height:150px;border:4px dashed}
+  .bin h4{margin:0 0 8px;font-family:'Jua';font-size:20px;font-weight:400}
+  .bin.danger{border-color:var(--red);background:#fff5f5}
+  .bin.safe{border-color:var(--green);background:#f0fffc}
+  .bin .inner{display:flex;flex-wrap:wrap;gap:8px}
+  /* timer */
+  .timer{font-family:'Jua';font-size:64px;text-align:center;color:var(--purple)}
+  .timer-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  /* checklist */
+  .check label{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;margin:6px 0;background:#f8f9fa;cursor:pointer}
+  .check input{width:24px;height:24px}
+  .alt-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px}
+  .alt{background:#f0f4ff;border-radius:16px;padding:14px;text-align:center;font-family:'Jua';font-size:19px}
+  .alt .e{font-size:40px;display:block}
+  /* flip cards */
+  .flips{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+  .flip{perspective:800px;height:150px;cursor:pointer}
+  .flip .in{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+  .flip.on .in{transform:rotateY(180deg)}
+  .flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;font-family:'Jua';font-size:19px}
+  .flip .f{background:var(--blue);color:#fff}
+  .flip .b{background:#fff;border:3px solid var(--blue);transform:rotateY(180deg);font-family:'Gowun Dodum';font-size:17px}
+  /* certificate */
+  .cert{border:10px double var(--yellow);border-radius:20px;padding:30px;text-align:center;background:#fffdf5}
+  .cert h2{font-size:40px;color:var(--purple)}
+  .cert .name{font-family:'Jua';font-size:34px;border-bottom:3px solid var(--ink);display:inline-block;min-width:200px}
+  .pledge label{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:12px;background:#f8f9fa;margin:6px 0;cursor:pointer}
+  .pledge input{width:24px;height:24px;flex:0 0 auto;margin-top:3px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  input.txt{padding:10px 12px;font-size:18px;border:2px solid #ced4da;border-radius:12px;font-family:'Gowun Dodum'}
+  .note{font-size:14px;color:var(--muted)}
+  .mascot{font-size:50px;float:right;margin-left:10px}
+  .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:14px 26px;border-radius:999px;font-family:'Jua';font-size:20px;transition:.4s;z-index:50}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .confetti{position:fixed;top:-20px;width:12px;height:12px;z-index:60;pointer-events:none;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+  @media (max-width:600px){.bins{grid-template-columns:1fr}.ox button{width:100px;height:100px;font-size:54px}}
+  @media print{nav,header,.progress-wrap,.noprint{display:none!important}section{display:none!important}#s-end{display:block!important}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="school">2026학년도 지능정보화 과의존 예방교육 · 서울문백초등학교 3, 4학년</div>
+  <h1>🦸 슈뻘맨과 함께하는 디지털 윤리 탐험</h1>
+  <p>영상을 보고, 문제를 풀고, 디지털 윤리 지킴이가 되어 보아요!</p>
+  <svg class="wave" viewBox="0 0 1440 100" preserveAspectRatio="none"><path fill="#fff8ec" d="M0,60 C360,120 1080,0 1440,60 L1440,100 L0,100 Z"/></svg>
+</header>
+
+<nav id="nav">
+  <button data-go="s-start">🏠 시작<span class="dot" id="d-s-start"></span></button>
+  <button data-go="s-ep1">① 숏폼 영상<span class="dot" id="d-s-ep1"></span></button>
+  <button data-go="s-ep2">② 거짓 정보<span class="dot" id="d-s-ep2"></span></button>
+  <button data-go="s-ep3">③ 개인정보<span class="dot" id="d-s-ep3"></span></button>
+  <button data-go="s-quiz">🏆 최종 퀴즈<span class="dot" id="d-s-quiz"></span></button>
+  <button data-go="s-end">📜 다짐과 인증서<span class="dot" id="d-s-end"></span></button>
+</nav>
+
+<main>
+  <div class="progress-wrap">
+    <div class="row" style="justify-content:space-between">
+      <div class="jua" style="font-size:20px">나의 탐험 진행도</div>
+      <div class="row"><div class="stars" id="stars">☆☆☆☆☆</div><button class="btn gray" style="font-size:14px;padding:6px 12px" onclick="if(confirm('처음부터 다시 할까요? (다음 친구가 사용할 때)')){try{localStorage.removeItem('dethics34')}catch(e){};location.reload()}">처음부터</button></div>
+    </div>
+    <div class="bar"><div id="bar"></div></div>
+  </div>
+
+  <!-- START -->
+  <section id="s-start" class="show">
+    <div class="card">
+      <span class="mascot">🦸‍♂️</span>
+      <h2>디지털 윤리란 무엇일까요?</h2>
+      <div class="def">
+        <b>디지털 윤리</b>란 <b>온라인(인터넷이나 스마트폰 세상)</b>에서 지켜야 하는 <b>예의</b>예요.
+        <div class="chips">
+          <span class="chip">💬 예쁜 말 사용하기</span>
+          <span class="chip">🔒 내 개인정보 지키기</span>
+          <span class="chip">📰 가짜 뉴스 함부로 믿지 않기</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🎬 먼저 영상을 봐요: [슈뻘맨] 디지털윤리여 영원하라</h3>
+      <div class="video" id="videoBox">
+        <a href="https://www.youtube.com/watch?v=Jz2IYWidVTU" target="_blank" style="position:absolute;inset:0;display:block">
+          <img src="https://i.ytimg.com/vi/Jz2IYWidVTU/hqdefault.jpg" alt="영상 썸네일" style="width:100%;height:100%;object-fit:cover;opacity:.85">
+          <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:90px;height:64px;background:#ff0000;border-radius:18px;display:flex;align-items:center;justify-content:center"><span style="border-left:28px solid #fff;border-top:17px solid transparent;border-bottom:17px solid transparent;margin-left:6px"></span></span>
+          <span class="jua" style="position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#fff;font-size:20px;text-shadow:0 2px 6px #000">눌러서 유튜브에서 영상 보기</span>
+        </a>
+      </div>
+      <p class="note">영상이 안 나오면 👉 <a href="https://www.youtube.com/watch?v=Jz2IYWidVTU" target="_blank">유튜브에서 바로 보기</a> (출처: 아름다운 디지털 세상 채널, 약 11분)</p>
+      <p>영상에는 3개의 이야기가 나와요.</p>
+      <div class="alt-list">
+        <div class="alt" style="background:#fff0f0"><span class="e">📱</span>EP1<br>숏폼 영상을 이렇게 오래 볼 줄 몰랐어</div>
+        <div class="alt" style="background:#eef4ff"><span class="e">🕵️</span>EP2<br>인터넷 얘기가 사실이 아닐 수도 있다고?</div>
+        <div class="alt" style="background:#e9fbf8"><span class="e">🔒</span>EP3<br>SNS에 올리면 안 되는 게 있다고?</div>
+      </div>
+      <div style="text-align:center;margin-top:18px">
+        <button class="btn" onclick="done('s-start');go('s-ep1')">영상 다 봤어요! 탐험 시작 ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- EP1 -->
+  <section id="s-ep1">
+    <div class="card">
+      <span class="ep-badge b1">EP1</span>
+      <h2>이렇게 숏폼 영상을 오래 볼 줄 몰랐어 📱</h2>
+      <p>유튜브 쇼츠, 인스타그램 릴스, 틱톡처럼 <b>짧은 영상</b>을 뭐라고 부를까요? 초성을 보고 빈칸을 채워 보세요!</p>
+      <div class="blank-line">( <span class="blank"><input data-ans="숏폼" placeholder="ㅅ ㅍ"></span> ) 영상이라고 해요.</div>
+    </div>
+    <div class="card">
+      <h3>🤔 숏폼 영상을 오래 보면 어떤 문제가 생길까요?</h3>
+      <div class="blank-line">① ( <span class="blank"><input data-ans="뇌" placeholder="ㄴ" style="width:70px"></span> )가 ( <span class="blank"><input data-ans="집중" placeholder="ㅈ ㅈ"></span> )할 수 있는 능력을 잃어버린다.</div>
+      <div class="blank-line">② ( <span class="blank"><input data-ans="긴" placeholder="ㄱ" style="width:70px"></span> ) 글을 읽기가 힘들어진다.</div>
+      <div class="blank-line">③ ( <span class="blank"><input data-ans="자극적" placeholder="ㅈ ㄱ ㅈ"></span> )이고 짧은 영상만 보고 싶어진다.</div>
+      <div class="blank-line">④ 쉽게 화가 나고 짜증이 난다. 😤</div>
+    </div>
+    <div class="card">
+      <h3>💡 이렇게 해결해요!</h3>
+      <div class="blank-line">숏폼 영상을 볼 때는 ( <span class="blank"><input data-ans="타이머" placeholder="ㅌ ㅇ ㅁ"></span> )를 맞춰놓고 시간 약속을 한다.</div>
+      <div class="row noprint"><button class="btn" onclick="checkBlanks('s-ep1')">정답 확인</button><button class="btn gray" onclick="hintBlanks('s-ep1')">힌트 보기</button></div>
+      <div class="feedback" id="fb-s-ep1"></div>
+    </div>
+    <div class="card">
+      <h3>⏰ 직접 해 봐요: 영상 시간 약속 타이머</h3>
+      <p>나는 영상을 몇 분만 볼지 정해 보세요. 시간이 끝나면 핸드폰을 내려놓아요!</p>
+      <div class="timer" id="timer">05:00</div>
+      <div class="timer-btns">
+        <button class="btn yellow" onclick="setT(1)">1분</button>
+        <button class="btn yellow" onclick="setT(5)">5분</button>
+        <button class="btn yellow" onclick="setT(10)">10분</button>
+        <button class="btn yellow" onclick="setT(20)">20분</button>
+        <button class="btn green" onclick="startT()">시작</button>
+        <button class="btn gray" onclick="stopT()">멈춤</button>
+      </div>
+      <p class="note" style="text-align:center">연습할 때는 1분으로 해 봐도 좋아요.</p>
+    </div>
+    <div class="card">
+      <h3>📴 핸드폰을 잠시 내려놓고 할 수 있는 일</h3>
+      <div class="alt-list">
+        <div class="alt"><span class="e">🚶</span>산책하기</div>
+        <div class="alt"><span class="e">📚</span>책 읽기</div>
+        <div class="alt"><span class="e">🎨</span>그림 그리기</div>
+        <div class="alt"><span class="e">⚽</span>운동하기</div>
+        <div class="alt"><span class="e">🧩</span>보드게임</div>
+      </div>
+      <p style="margin-top:14px">나만의 활동을 적어 보세요:</p>
+      <input class="txt" id="myAlt" placeholder="예: 동생이랑 블록 쌓기" style="width:100%">
+    </div>
+    <div class="card check">
+      <h3>✅ 나의 숏폼 습관 점검하기</h3>
+      <label><input type="checkbox" class="hab">영상 하나만 보려다 계속 넘겨 본 적이 있다.</label>
+      <label><input type="checkbox" class="hab">영상을 그만 보라고 하면 짜증이 난다.</label>
+      <label><input type="checkbox" class="hab">긴 글이나 책을 읽는 게 지루하다.</label>
+      <label><input type="checkbox" class="hab">잠자기 전에 영상을 보다가 늦게 잔다.</label>
+      <label><input type="checkbox" class="hab">밥 먹을 때도 영상을 본다.</label>
+      <button class="btn purple" onclick="habit()">결과 보기</button>
+      <div class="feedback" id="fb-hab"></div>
+    </div>
+  </section>
+
+  <!-- EP2 -->
+  <section id="s-ep2">
+    <div class="card">
+      <span class="ep-badge b2">EP2</span>
+      <h2>인터넷에 올라온 얘기가 사실이 아닐 수도 있다고? 🕵️</h2>
+      <h3>OX 퀴즈</h3>
+      <p style="font-size:22px;text-align:center" class="jua">"인터넷에 올라오는 정보는 모두 사실이다."</p>
+      <div class="ox" id="ox1">
+        <button class="o" onclick="ox(this,false)">O</button>
+        <button class="x" onclick="ox(this,true)">X</button>
+      </div>
+      <div class="feedback" id="fb-ox1"></div>
+    </div>
+    <div class="card">
+      <h3>✏️ 빈칸 채우기</h3>
+      <p>인터넷에 올라오는 정보와 이야기는 사실이 아닐 수 있습니다.</p>
+      <div class="blank-line">( <span class="blank"><input data-ans="거짓정보" placeholder="ㄱ ㅈ ㅈ ㅂ" style="width:150px"></span> )로 인해 피해를 입을 수 있어요.</div>
+      <div class="row noprint"><button class="btn" onclick="checkBlanks('s-ep2')">정답 확인</button><button class="btn gray" onclick="hintBlanks('s-ep2')">힌트 보기</button></div>
+      <div class="feedback" id="fb-s-ep2"></div>
+    </div>
+    <div class="card">
+      <h3>🔍 진짜일까? 가짜일까? 상황 퀴즈</h3>
+      <div id="sit"></div>
+    </div>
+    <div class="card">
+      <h3>🧠 거짓 정보를 만났을 때 기억해요 (카드를 눌러 보세요)</h3>
+      <div class="flips">
+        <div class="flip" onclick="this.classList.toggle('on')"><div class="in"><div class="f">1. 멈추기 ✋</div><div class="b">보자마자 믿거나 퍼뜨리지 않고 잠깐 멈춰요.</div></div></div>
+        <div class="flip" onclick="this.classList.toggle('on')"><div class="in"><div class="f">2. 확인하기 🔎</div><div class="b">누가 올린 글인지, 믿을 만한 곳(뉴스, 학교 누리집 등)에도 있는지 확인해요.</div></div></div>
+        <div class="flip" onclick="this.classList.toggle('on')"><div class="in"><div class="f">3. 물어보기 🙋</div><div class="b">헷갈리면 선생님이나 부모님께 여쭤봐요.</div></div></div>
+        <div class="flip" onclick="this.classList.toggle('on')"><div class="in"><div class="f">4. 퍼뜨리지 않기 🚫</div><div class="b">확인되지 않은 이야기를 친구에게 보내면 누군가 피해를 입을 수 있어요.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EP3 -->
+  <section id="s-ep3">
+    <div class="card">
+      <span class="ep-badge b3">EP3</span>
+      <h2>SNS에 올리면 안 되는 게 있다고? 🔒</h2>
+      <div class="blank-line">( <span class="blank"><input data-ans="개인정보" placeholder="ㄱ ㅇ ㅈ ㅂ" style="width:150px"></span> )란? 나와 관련한 모든 정보들</div>
+      <p>개인정보에는 무엇이 있을까요?</p>
+      <div class="blank-line">( <span class="blank"><input data-ans="이름" placeholder="ㅇ ㄹ" style="width:90px"></span> ,
+        <span class="blank"><input data-ans="생년월일" placeholder="ㅅ ㄴ ㅇ ㅇ"></span> ,
+        <span class="blank"><input data-ans="전화번호" placeholder="ㅈ ㅎ ㅂ ㅎ"></span> ,
+        <span class="blank"><input data-ans="주소" placeholder="ㅈ ㅅ" style="width:90px"></span> , 주민번호, 사진 등 )</div>
+      <div class="row noprint"><button class="btn" onclick="checkBlanks('s-ep3')">정답 확인</button><button class="btn gray" onclick="hintBlanks('s-ep3')">힌트 보기</button></div>
+      <div class="feedback" id="fb-s-ep3"></div>
+    </div>
+    <div class="card">
+      <h3>⚠️ 왜 위험할까요?</h3>
+      <div class="def" style="background:#fff0f0;border-color:var(--red)">
+        <p style="margin:0">📢 많은 사람이 보는 SNS에 <b>개인정보</b>를 올리면 위험해요.</p>
+        <p style="margin:8px 0 0">🔁 개인정보가 담긴 사진, 영상을 올리면 <b>계속해서 퍼져 나갈 수 있어요.</b> 한 번 퍼지면 지우기 어려워요.</p>
+        <p style="margin:8px 0 0">🙅 특히 <b>몸이 드러나는 사진이나 영상</b>은 다른 곳으로 퍼져 나가 나에게 큰 피해가 올 수 있어요.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🗂️ 분류 게임: SNS에 올려도 될까?</h3>
+      <p class="note">카드를 누른 다음, 알맞은 상자를 눌러 옮겨 보세요.</p>
+      <div class="pool" id="pool"></div>
+      <div class="bins">
+        <div class="bin danger" onclick="drop('danger')"><h4>🚫 올리면 위험해요 (개인정보)</h4><div class="inner" id="bin-danger"></div></div>
+        <div class="bin safe" onclick="drop('safe')"><h4>🙆 올려도 괜찮아요</h4><div class="inner" id="bin-safe"></div></div>
+      </div>
+      <div class="feedback" id="fb-sort"></div>
+      <button class="btn gray noprint" onclick="initSort()">다시 하기</button>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="s-quiz">
+    <div class="card">
+      <h2>🏆 최종 도전! 디지털 윤리 골든벨</h2>
+      <p>모두 10문제예요. 몇 개나 맞힐 수 있을까요?</p>
+      <div id="qbox"></div>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section id="s-end">
+    <div class="card noprint pledge">
+      <h2>✋ 나의 디지털 윤리 다짐</h2>
+      <p>지킬 수 있는 다짐에 체크해 보세요.</p>
+      <label><input type="checkbox" class="pl" value="영상을 볼 때는 타이머를 맞추고 시간 약속을 지킬게요.">영상을 볼 때는 타이머를 맞추고 시간 약속을 지킬게요.</label>
+      <label><input type="checkbox" class="pl" value="인터넷 정보를 바로 믿거나 퍼뜨리지 않고 확인할게요.">인터넷 정보를 바로 믿거나 퍼뜨리지 않고 확인할게요.</label>
+      <label><input type="checkbox" class="pl" value="SNS에 내 개인정보와 사진을 함부로 올리지 않을게요.">SNS에 내 개인정보와 사진을 함부로 올리지 않을게요.</label>
+      <label><input type="checkbox" class="pl" value="친구의 개인정보와 사진도 소중하게 지켜 줄게요.">친구의 개인정보와 사진도 소중하게 지켜 줄게요.</label>
+      <label><input type="checkbox" class="pl" value="온라인에서도 예쁜 말을 사용할게요.">온라인에서도 예쁜 말을 사용할게요.</label>
+      <p style="margin-top:14px">나만의 다짐:</p>
+      <input class="txt" id="myPledge" placeholder="예: 잠자기 30분 전에는 핸드폰을 거실에 둘게요." style="width:100%">
+      <div class="row" style="margin-top:14px">
+        <input class="txt" id="grade" placeholder="학년" style="width:80px">
+        <input class="txt" id="cls" placeholder="반" style="width:80px">
+        <input class="txt" id="sname" placeholder="이름" style="width:160px">
+        <button class="btn purple" onclick="makeCert()">인증서 만들기</button>
+      </div>
+    </div>
+    <div class="card cert" id="cert" style="display:none">
+      <div style="font-size:50px">🏅</div>
+      <h2>디지털 윤리 지킴이 인증서</h2>
+      <p><span id="c-gc"></span></p>
+      <p><span class="name" id="c-name"></span></p>
+      <p>위 어린이는 「슈뻘맨과 함께하는 디지털 윤리 탐험」을 끝까지 마치고<br>숏폼 영상 조절, 거짓 정보 구별, 개인정보 보호를 약속하였기에<br>이 인증서를 드립니다.</p>
+      <div id="c-pl" style="text-align:left;display:inline-block;margin:10px auto"></div>
+      <p class="jua" style="font-size:20px">골든벨 점수: <span id="c-score">-</span> / 10 &nbsp; 획득한 별: <span id="c-stars"></span></p>
+      <p id="c-date"></p>
+      <p class="jua" style="font-size:22px">서울문백초등학교</p>
+      <button class="btn noprint" onclick="window.print()">🖨️ 인쇄하기</button>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SECTIONS=['s-start','s-ep1','s-ep2','s-ep3','s-quiz','s-end'];
+let state={done:{},score:null};
+try{state=JSON.parse(localStorage.getItem('dethics34'))||state}catch(e){}
+function save(){try{localStorage.setItem('dethics34',JSON.stringify(state))}catch(e){}}
+function go(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.toggle('show',s.id===id));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
+  window.scrollTo({top:document.querySelector('nav').offsetTop,behavior:'smooth'});
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.go));
+function done(id){
+  if(!state.done[id]){state.done[id]=true;save();toast('⭐ 별 하나 획득!')}
+  render();
+}
+function render(){
+  const n=SECTIONS.filter(s=>s!=='s-end'&&state.done[s]).length;
+  document.getElementById('bar').style.width=(n/5*100)+'%';
+  document.getElementById('stars').textContent='★'.repeat(n)+'☆'.repeat(5-n);
+  SECTIONS.forEach(s=>{const d=document.getElementById('d-'+s);if(d)d.classList.toggle('done',!!state.done[s])});
+}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+function confetti(){
+  const c=['#ff5a5f','#3a86ff','#ffbe0b','#2ec4b6','#8338ec'];
+  for(let i=0;i<60;i++){const d=document.createElement('div');d.className='confetti';d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDuration=(1.5+Math.random()*2)+'s';d.style.borderRadius=Math.random()>.5?'50%':'2px';document.body.appendChild(d);setTimeout(()=>d.remove(),4000)}
+}
+const norm=s=>s.replace(/\s/g,'');
+function checkBlanks(sec){
+  const ins=[...document.querySelectorAll('#'+sec+' .blank input')];
+  let ok=0;
+  ins.forEach(i=>{const r=norm(i.value)===i.dataset.ans;i.classList.remove('ok','no');void i.offsetWidth;i.classList.add(r?'ok':'no');if(r){ok++;i.readOnly=true}});
+  const fb=document.getElementById('fb-'+sec);
+  if(ok===ins.length){fb.className='feedback ok';fb.textContent='🎉 모두 맞았어요! 훌륭해요!';confetti();done(sec)}
+  else{fb.className='feedback no';fb.textContent=`${ins.length}개 중 ${ok}개 맞았어요. 빨간 칸을 다시 생각해 봐요!`}
+}
+function hintBlanks(sec){
+  document.querySelectorAll('#'+sec+' .blank input').forEach(i=>{if(!i.classList.contains('ok')){i.value=i.dataset.ans[0];i.focus()}});
+  toast('💡 첫 글자를 알려 줬어요');
+}
+document.querySelectorAll('.blank input').forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter'){checkBlanks(i.closest('section').id)}}));
+
+/* timer */
+let tLeft=300,tInt=null;
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function setT(m){stopT();tLeft=m*60;document.getElementById('timer').textContent=fmt(tLeft)}
+function startT(){if(tInt)return;tInt=setInterval(()=>{tLeft--;document.getElementById('timer').textContent=fmt(Math.max(tLeft,0));if(tLeft<=0){stopT();toast('⏰ 약속한 시간이 끝났어요! 핸드폰을 내려놓아요');confetti()}},1000)}
+function stopT(){clearInterval(tInt);tInt=null}
+function habit(){
+  const n=document.querySelectorAll('.hab:checked').length;const fb=document.getElementById('fb-hab');fb.className='feedback';
+  fb.textContent=n<=1?'👍 아주 잘 지키고 있어요! 지금처럼만 해요.':n<=3?'🙂 조금 조심해야 해요. 타이머로 시간 약속을 해 봐요.':'⚠️ 숏폼 영상에 너무 빠져 있을 수 있어요. 부모님, 선생님과 함께 약속을 정해 봐요.';
+}
+
+/* OX */
+function ox(btn,correct){
+  const fb=document.getElementById('fb-ox1');
+  if(correct){fb.className='feedback ok';fb.textContent='⭕ 정답! 인터넷 정보는 사실이 아닐 수도 있어요.';document.querySelectorAll('#ox1 button').forEach(b=>b.disabled=true);state.ox=true;save();ep2Check()}
+  else{fb.className='feedback no';fb.textContent='❌ 다시 생각해 봐요. 인터넷에는 누구나 글을 올릴 수 있어요.'}
+}
+/* situations */
+const SIT=[
+  {q:'단체 대화방에 "내일 우리 학교 휴교래! 진짜야!"라는 글이 올라왔어요. 어떻게 할까요?',c:['신난다! 다른 친구들에게도 바로 보낸다.','선생님이나 학교 누리집, 알림장에서 사실인지 확인한다.','그냥 믿고 내일 학교에 가지 않는다.'],a:1,e:'확인되지 않은 소식은 먼저 믿을 만한 곳에서 확인해요.'},
+  {q:'영상에서 "이 젤리를 먹으면 키가 10cm 큰대요!"라고 해요.',c:['정말인지 의심하고, 부모님께 여쭤본다.','당장 사 달라고 조른다.','댓글에 "대박 진짜래!"라고 쓴다.'],a:0,e:'너무 놀랍거나 믿기 어려운 이야기는 거짓 정보일 수 있어요.'},
+  {q:'반 친구에 대한 나쁜 소문이 담긴 글을 봤어요.',c:['재미있으니까 다른 친구에게 보낸다.','소문이 사실인지 모르니 퍼뜨리지 않고, 필요하면 선생님께 알린다.','댓글로 친구를 놀린다.'],a:1,e:'거짓 소문은 친구에게 큰 상처와 피해를 줄 수 있어요.'}
+];
+let sitIdx=0,sitOk=0;
+function renderSit(){
+  const box=document.getElementById('sit');
+  if(sitIdx>=SIT.length){box.innerHTML=`<div class="feedback ok">🎉 상황 퀴즈 완료! (${sitOk}/${SIT.length})</div><button class="btn gray" onclick="sitIdx=0;sitOk=0;renderSit()">다시 풀기</button>`;state.sit=true;save();ep2Check();return}
+  const s=SIT[sitIdx];
+  box.innerHTML=`<p class="jua" style="font-size:20px">상황 ${sitIdx+1}. ${s.q}</p><div class="choices">${s.c.map((c,i)=>`<button data-i="${i}">${['①','②','③'][i]} ${c}</button>`).join('')}</div><div class="feedback" id="sitfb"></div>`;
+  box.querySelectorAll('.choices button').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i,fb=document.getElementById('sitfb');
+    box.querySelectorAll('.choices button').forEach(x=>x.disabled=true);
+    box.querySelectorAll('.choices button')[s.a].classList.add('ok');
+    if(i===s.a){sitOk++;fb.className='feedback ok';fb.textContent='⭕ '+s.e}else{b.classList.add('no');fb.className='feedback no';fb.textContent='❌ '+s.e}
+    setTimeout(()=>{sitIdx++;renderSit()},2200);
+  });
+}
+function ep2Check(){if(state.ox&&state.sit&&document.querySelector('#s-ep2 .blank input').classList.contains('ok'))done('s-ep2')}
+const _cb=checkBlanks;checkBlanks=function(sec){if(sec==='s-ep2'){const ins=[...document.querySelectorAll('#s-ep2 .blank input')];let ok=0;ins.forEach(i=>{const r=norm(i.value)===i.dataset.ans;i.classList.remove('ok','no');void i.offsetWidth;i.classList.add(r?'ok':'no');if(r){ok++;i.readOnly=true}});const fb=document.getElementById('fb-s-ep2');if(ok===ins.length){fb.className='feedback ok';fb.textContent='🎉 정답이에요!';ep2Check();if(!(state.ox&&state.sit))fb.textContent+=' OX 퀴즈와 상황 퀴즈도 풀어 봐요.'}else{fb.className='feedback no';fb.textContent='다시 생각해 봐요!'}}else _cb(sec)}
+
+/* sort game */
+const ITEMS=[['내 이름','danger'],['생년월일','danger'],['전화번호','danger'],['우리 집 주소','danger'],['주민등록번호','danger'],['내 얼굴 사진','danger'],['학교 이름이 보이는 사진','danger'],['비밀번호','danger'],
+  ['하늘 풍경 사진','safe'],['좋아하는 동물','safe'],['이름 없는 내 그림','safe'],['좋아하는 색깔','safe']];
+let selItem=null,sortOk=0;
+function initSort(){
+  sortOk=0;selItem=null;document.getElementById('bin-danger').innerHTML='';document.getElementById('bin-safe').innerHTML='';document.getElementById('fb-sort').textContent='';
+  const pool=document.getElementById('pool');pool.innerHTML='';
+  [...ITEMS].sort(()=>Math.random()-.5).forEach(([t,k])=>{const d=document.createElement('div');d.className='item';d.textContent=t;d.dataset.k=k;d.draggable=true;
+    d.onclick=e=>{if(d.classList.contains('ok'))return;e.stopPropagation();document.querySelectorAll('.item').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');selItem=d};
+    d.ondragstart=()=>{selItem=d};pool.appendChild(d)});
+}
+function drop(k){
+  if(!selItem)return;const d=selItem,fb=document.getElementById('fb-sort');
+  if(d.dataset.k===k){d.classList.remove('sel');d.classList.add('ok');d.draggable=false;document.getElementById('bin-'+k).appendChild(d);sortOk++;selItem=null;
+    fb.className='feedback ok';fb.textContent=k==='danger'?`⭕ 맞아요! "${d.textContent}"은(는) 소중한 개인정보예요.`:`⭕ 맞아요! 나를 알아볼 수 없는 정보예요.`;
+    if(sortOk===ITEMS.length){fb.textContent='🎉 분류 완료! 개인정보 지킴이 합격!';confetti();state.sort=true;save();ep3Check()}}
+  else{d.classList.remove('no');void d.offsetWidth;d.classList.add('no');fb.className='feedback no';fb.textContent='❌ 다시 생각해 봐요. 이 정보로 나를 찾을 수 있을까요?'}
+}
+document.querySelectorAll('.bin').forEach(b=>{b.ondragover=e=>e.preventDefault();b.ondrop=e=>{e.preventDefault();drop(b.classList.contains('danger')?'danger':'safe')}});
+function ep3Check(){if(state.sort&&[...document.querySelectorAll('#s-ep3 .blank input')].every(i=>i.classList.contains('ok')))done('s-ep3')}
+const _cb2=checkBlanks;checkBlanks=function(sec){_cb2(sec);if(sec==='s-ep3'){if(!state.sort&&[...document.querySelectorAll('#s-ep3 .blank input')].every(i=>i.classList.contains('ok'))){const fb=document.getElementById('fb-s-ep3');fb.textContent='🎉 정답! 아래 분류 게임도 해 봐요.'}ep3Check()}}
+// prevent done() before sort game on EP3
+const _done=done;done=function(id){if(id==='s-ep3'&&!state.sort)return;if(id==='s-ep2'&&!(state.ox&&state.sit&&document.querySelector('#s-ep2 .blank input').classList.contains('ok')))return;_done(id)}
+
+/* final quiz */
+const Q=[
+  {q:'유튜브 쇼츠, 릴스, 틱톡 같은 짧은 영상을 무엇이라고 할까요?',c:['롱폼 영상','숏폼 영상','라이브 방송'],a:1},
+  {q:'숏폼 영상을 오래 보면 생기는 문제가 아닌 것은?',c:['집중하는 능력이 약해진다','긴 글을 읽기 힘들어진다','책 읽기가 더 쉬워진다'],a:2},
+  {q:'숏폼 영상을 볼 때 좋은 습관은?',c:['타이머를 맞추고 시간 약속을 한다','졸릴 때까지 계속 본다','밥 먹을 때도 본다'],a:0},
+  {q:'인터넷에 올라오는 정보는 모두 사실이다.',c:['O','X'],a:1},
+  {q:'놀라운 소식을 인터넷에서 봤을 때 가장 먼저 할 일은?',c:['바로 친구들에게 퍼뜨린다','믿을 만한 곳에서 사실인지 확인한다','댓글을 단다'],a:1},
+  {q:'"나와 관련한 모든 정보"를 무엇이라고 할까요?',c:['개인정보','거짓정보','날씨정보'],a:0},
+  {q:'다음 중 개인정보가 아닌 것은?',c:['전화번호','집 주소','좋아하는 색깔'],a:2},
+  {q:'SNS에 올린 사진과 영상은 어떻게 될 수 있을까요?',c:['금방 저절로 사라진다','계속해서 퍼져 나갈 수 있다','나만 볼 수 있다'],a:1},
+  {q:'디지털 윤리란 무엇일까요?',c:['온라인에서 지켜야 하는 예의','게임을 잘하는 방법','스마트폰을 빨리 쓰는 법'],a:0},
+  {q:'친구의 사진을 SNS에 올리고 싶을 때는?',c:['재미있으면 그냥 올린다','친구에게 먼저 허락을 받는다','몰래 올리고 나중에 말한다'],a:1}
+];
+let qi=0,qs=0;
+function renderQ(){
+  const box=document.getElementById('qbox');
+  if(qi>=Q.length){
+    state.score=Math.max(state.score||0,qs);save();
+    box.innerHTML=`<div style="text-align:center"><div style="font-size:70px">${qs>=9?'🏆':qs>=7?'🥈':'💪'}</div><h3>${Q.length}문제 중 ${qs}문제 맞혔어요!</h3><p>${qs>=9?'디지털 윤리 박사님이에요!':qs>=7?'아주 잘했어요!':'다시 도전해 봐요!'}</p><div class="row" style="justify-content:center"><button class="btn gray" onclick="qi=0;qs=0;renderQ()">다시 도전</button><button class="btn purple" onclick="go('s-end')">다짐하러 가기 ▶</button></div></div>`;
+    if(qs>=7){confetti();done('s-quiz')}return}
+  const s=Q[qi];
+  box.innerHTML=`<div class="row" style="justify-content:space-between"><span class="ep-badge b2">${qi+1} / ${Q.length}</span><span class="jua">맞힌 개수: ${qs}</span></div><p class="jua" style="font-size:22px;margin-top:12px">Q. ${s.q}</p><div class="choices">${s.c.map((c,i)=>`<button data-i="${i}">${c}</button>`).join('')}</div><div class="feedback" id="qfb"></div>`;
+  box.querySelectorAll('.choices button').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i,fb=document.getElementById('qfb');box.querySelectorAll('.choices button').forEach(x=>x.disabled=true);
+    box.querySelectorAll('.choices button')[s.a].classList.add('ok');
+    if(i===s.a){qs++;fb.className='feedback ok';fb.textContent='⭕ 정답!'}else{b.classList.add('no');fb.className='feedback no';fb.textContent='❌ 아쉬워요! 초록색이 정답이에요.'}
+    setTimeout(()=>{qi++;renderQ()},1300);
+  });
+}
+
+/* certificate */
+function makeCert(){
+  const name=document.getElementById('sname').value.trim();
+  const pls=[...document.querySelectorAll('.pl:checked')].map(x=>x.value);const my=document.getElementById('myPledge').value.trim();if(my)pls.push(my);
+  if(!name){toast('이름을 적어 주세요');return}
+  if(!pls.length){toast('다짐을 하나 이상 골라 주세요');return}
+  const g=document.getElementById('grade').value.trim(),c=document.getElementById('cls').value.trim();
+  document.getElementById('c-gc').textContent=(g?g+'학년 ':'')+(c?c+'반':'');
+  document.getElementById('c-name').textContent=name;
+  document.getElementById('c-pl').innerHTML=pls.map(p=>'✔ '+p.replace(/</g,'&lt;')).join('<br>');
+  document.getElementById('c-score').textContent=state.score??'-';
+  const n=SECTIONS.filter(s=>s!=='s-end'&&state.done[s]).length;
+  document.getElementById('c-stars').textContent='★'.repeat(n)+'☆'.repeat(5-n);
+  const d=new Date();document.getElementById('c-date').textContent=`${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
+  document.getElementById('cert').style.display='block';done('s-end');confetti();
+  document.getElementById('cert').scrollIntoView({behavior:'smooth'});
+}
+
+if(/^https?:$/.test(location.protocol)){document.getElementById('videoBox').innerHTML='<iframe src="https://www.youtube.com/embed/Jz2IYWidVTU?rel=0" title="[슈뻘맨] 디지털윤리여 영원하라" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>'}
+renderSit();initSort();renderQ();render();go('s-start');
+</script>
+</body>
+</html>
